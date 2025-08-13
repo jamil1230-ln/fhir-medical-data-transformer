@@ -4,6 +4,8 @@ Ein **Python-basiertes Tool** zur Transformation medizinischer Rohdaten in das s
 
 Das Tool verarbeitet medizinische Textdaten und Codes (z. B. **ICD-10**, **OPS**, **LOINC**) und wandelt sie in strukturierte FHIR-Ressourcen um, um die interoperable Übertragung von Patientendaten, Diagnosen, Therapieplänen, Laborwerten und Bildgebungsinformationen zwischen verschiedenen Gesundheitssystemen zu ermöglichen.
 
+---
+
 ## 🚀 Funktionen
 - **Patientendaten** (Name, Geburtsdatum, Geschlecht) ➡️ FHIR Patient-Ressourcen  
 - **Diagnosen** (ICD-10) ➡️ FHIR Condition-Ressourcen  
@@ -11,6 +13,15 @@ Das Tool verarbeitet medizinische Textdaten und Codes (z. B. **ICD-10**, **OPS**
 - **Laborwerte** (LOINC) ➡️ FHIR Observation-Ressourcen  
 - **Import & Export** von FHIR-Daten (JSON/XML)  
 - *(Optional)* REST-API für Zugriff & Verwaltung  
+
+---
+
+## 🛠 Technologien
+- **Python** (inkl. `fhir.resources`, `Flask`)  
+- **JSON / XML** für Datenaustausch  
+- **SQLite** als optionale lokale Datenbank  
+
+---
 
 ## 📦 Installation
 ```bash
@@ -23,5 +34,4 @@ python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 
 # Abhängigkeiten installieren
-pip install -r [requirements.txt](http://_vscodecontentref_/2)
-```
+pip install -r requirements.txt
