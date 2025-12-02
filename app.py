@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -40,12 +40,18 @@ logger.info("Application starting...")
 app = Flask(__name__)
 
 # Configure CORS
+flask_env = os.getenv("FLASK_ENV", "production")
 cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
 cors_origins = [origin.strip() for origin in cors_origins if origin.strip()]
+
 if not cors_origins:
-    # Default to restrictive CORS if not configured
-    cors_origins = ["http://localhost:3000"]
-    logger.warning("No CORS_ORIGINS configured, using default: http://localhost:3000")
+    if flask_env == "production":
+        logger.error("CORS_ORIGINS must be configured in production environment")
+        raise RuntimeError("CORS_ORIGINS environment variable is required in production")
+    else:
+        # Development fallback only
+        cors_origins = ["http://localhost:3000"]
+        logger.warning("No CORS_ORIGINS configured, using development default: http://localhost:3000")
 
 CORS(
     app,
@@ -69,7 +75,8 @@ def transform():
     logger.info("Transform request received")
     try:
         payload = request.get_json(force=True)
-        logger.debug(f"Payload received: {payload}")
+        # Don't log payload as it may contain sensitive medical data
+        logger.debug("Processing transformation request")
         
         # Validate input
         inp = TransformInput.model_validate(payload)
@@ -83,7 +90,7 @@ def transform():
         save_bundle(
             bundle_json["id"], 
             json.dumps(bundle_json), 
-            datetime.utcnow().isoformat()
+            datetime.now(timezone.utc).isoformat()
         )
         
         logger.info(f"Successfully created FHIR bundle: {bundle_json['id']}")
