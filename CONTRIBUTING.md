@@ -219,6 +219,7 @@ mypy . --ignore-missing-imports
 ```python
 from typing import Optional, List
 from datetime import date
+from uuid import uuid4
 from pydantic import BaseModel
 
 
