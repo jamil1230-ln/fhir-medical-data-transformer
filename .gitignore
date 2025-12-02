@@ -132,3 +132,5 @@ dmypy.json
 
 # pip installer
 get-pip.py
+logs/
+data.db
