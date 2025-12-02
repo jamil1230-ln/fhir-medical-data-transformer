@@ -71,7 +71,7 @@ fhir-medical-data-transformer/
 
 ## 🛠 Technologien
 
-- **Python 3.12+** - Programmiersprache
+- **Python 3.9+** - Programmiersprache (getestet mit 3.9 - 3.12)
 - **Flask 3.1** - Web-Framework für REST-API
 - **fhir.resources 8.1** - FHIR R4 Ressourcen-Modelle
 - **Pydantic 2.11** - Datenvalidierung
@@ -594,7 +594,10 @@ CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
 
 ```bash
 docker build -t fhir-transformer .
-docker run -p 5000:5000 -v fhir-data:/app fhir-transformer
+docker run -p 5000:5000 fhir-transformer
+
+# Mit persistenter Datenbank (Named Volume)
+docker run -p 5000:5000 -v fhir-data:/app/data fhir-transformer
 ```
 
 ### Docker Compose
@@ -610,7 +613,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - fhir-data:/app
+      - fhir-data:/app/data
     environment:
       - FLASK_ENV=production
       - FLASK_DEBUG=False

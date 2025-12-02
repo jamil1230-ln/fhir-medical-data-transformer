@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine, text
+import os
 
-engine = create_engine("sqlite:///data.db", future=True)
+# Erstelle data Verzeichnis falls nicht vorhanden
+os.makedirs("data", exist_ok=True)
+
+engine = create_engine("sqlite:///data/data.db", future=True)
 
 def init_db():
     with engine.begin() as conn:
