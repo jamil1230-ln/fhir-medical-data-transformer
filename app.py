@@ -72,14 +72,7 @@ def transform():
         logger.debug(f"Payload received: {payload}")
         
         # Validate input
-        try:
-            inp = TransformInput.model_validate(payload)
-        except ValidationError as ve:
-            logger.warning(f"Validation error: {ve}")
-            return jsonify({
-                "error": "Invalid input data",
-                "details": ve.errors()
-            }), 400
+        inp = TransformInput.model_validate(payload)
         
         # Transform to FHIR
         bundle = transform_to_fhir_bundle(inp)
@@ -97,7 +90,7 @@ def transform():
         return jsonify(bundle_json), 201
         
     except ValidationError as ve:
-        logger.error(f"Validation error: {ve}")
+        logger.warning(f"Validation error: {ve}")
         return jsonify({
             "error": "Invalid input data",
             "details": ve.errors()
