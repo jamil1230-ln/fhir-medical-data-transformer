@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from models import TransformInput 
 from fhir_handler import transform_to_fhir_bundle
 from database import init_db, save_bundle
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import ValidationError
 from loguru import logger
 import json
@@ -51,7 +51,7 @@ def create_error_response(error_type: str, message: str, details: dict = None, s
     response = {
         "error": error_type,
         "message": message,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat()
     }
     if details:
         response["details"] = details
@@ -185,7 +185,7 @@ def transform():
     
     # Save to database
     init_db()
-    save_bundle(bundle_json["id"], json.dumps(bundle_json), datetime.utcnow().isoformat())
+    save_bundle(bundle_json["id"], json.dumps(bundle_json), datetime.now(timezone.utc).isoformat())
     
     logger.info(f"Transformation completed successfully, bundle ID: {bundle_json['id']}")
     return jsonify(bundle_json), 201

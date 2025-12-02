@@ -1,6 +1,6 @@
 from typing import List
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 from fhir.resources.bundle import Bundle
 from fhir.resources.patient import Patient
 from fhir.resources.humanname import HumanName
@@ -170,7 +170,7 @@ def transform_to_fhir_bundle(inp: TransformInput) -> Bundle:
             id=f"bundle-{uuid4()}",
             resourceType="Bundle",
             type="collection",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             entry=entries
         )
         

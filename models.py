@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 import re
 from exceptions import InvalidInputError
 
@@ -105,7 +105,7 @@ class LaborwertIn(BaseModel):
     loinc: str
     wert: float
     einheit: str
-    gemessen_am: datetime = Field(default_factory=datetime.utcnow)
+    gemessen_am: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     referenz_min: Optional[float] = None
     referenz_max: Optional[float] = None
     beschreibung: Optional[str] = None
@@ -134,7 +134,12 @@ class LaborwertIn(BaseModel):
     @classmethod
     def validate_gemessen_am(cls, v: datetime) -> datetime:
         """Validate measurement date is not in the future."""
-        if v > datetime.utcnow():
+        # Handle both timezone-aware and timezone-naive datetimes
+        now = datetime.now(timezone.utc)
+        if v.tzinfo is None:
+            # If input is naive, compare with naive current time
+            now = datetime.now()
+        if v > now:
             raise ValueError("Messzeitpunkt darf nicht in der Zukunft liegen")
         return v
     
