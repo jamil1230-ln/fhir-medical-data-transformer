@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 import os
 
-# Erstelle data Verzeichnis falls nicht vorhanden
+# Create data directory if it doesn't exist
 os.makedirs("data", exist_ok=True)
 
 engine = create_engine("sqlite:///data/data.db", future=True)

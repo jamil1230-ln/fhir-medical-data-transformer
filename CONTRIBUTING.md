@@ -86,7 +86,7 @@ Dokumentationsverbesserungen sind immer willkommen:
 1. **Repository forken und klonen:**
 
 ```bash
-git clone https://github.com/IHR-USERNAME/fhir-medical-data-transformer.git
+git clone https://github.com/YOUR-USERNAME/fhir-medical-data-transformer.git
 cd fhir-medical-data-transformer
 ```
 
