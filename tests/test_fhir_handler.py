@@ -511,7 +511,7 @@ class TestBundleTransformation:
         bundle = transform_to_fhir_bundle(inp)
         
         # Verify timestamp can be parsed as ISO format
-        datetime.fromisoformat(bundle.timestamp.replace('Z', '+00:00'))
+        datetime.fromisoformat(bundle.timestamp)
 
 
 class TestInputValidation:

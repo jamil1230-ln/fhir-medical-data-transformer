@@ -405,7 +405,7 @@ class TestTransformEndpoint:
         # Verify timestamp is present and can be parsed
         assert "timestamp" in data
         # Should be ISO format
-        datetime.fromisoformat(data["timestamp"].replace('Z', '+00:00'))
+        datetime.fromisoformat(data["timestamp"])
     
     def test_transform_with_observation_reference_ranges(self, client):
         """Test transform with observations having reference ranges."""
