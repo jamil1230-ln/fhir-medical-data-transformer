@@ -1,0 +1,72 @@
+services:
+  # Main FHIR Medical Data Transformer service
+  fhir-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fhir-medical-transformer
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount source code for development hot-reload
+      - ./app.py:/app/app.py
+      - ./models.py:/app/models.py
+      - ./fhir_handler.py:/app/fhir_handler.py
+      - ./database.py:/app/database.py
+      # Persist database
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/ping', timeout=2)"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - fhir-network
+
+  # Optional: PostgreSQL database (commented out by default)
+  # Uncomment if you want to use PostgreSQL instead of SQLite
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: fhir-postgres
+  #   environment:
+  #     - POSTGRES_DB=fhir_db
+  #     - POSTGRES_USER=fhir_user
+  #     - POSTGRES_PASSWORD=fhir_password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U fhir_user"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - fhir-network
+
+  # Optional: pgAdmin for database management (commented out by default)
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   container_name: fhir-pgadmin
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@fhir.local
+  #     - PGADMIN_DEFAULT_PASSWORD=admin
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - fhir-network
+
+networks:
+  fhir-network:
+    driver: bridge
+
+# volumes:
+#   postgres_data:

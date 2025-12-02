@@ -1,6 +1,9 @@
 from sqlalchemy import create_engine, text
+import os
 
-engine = create_engine("sqlite:///data.db", future=True)
+# Use /app/data directory for Docker, fall back to current directory
+db_path = os.getenv("DB_PATH", "/app/data/data.db")
+engine = create_engine(f"sqlite:///{db_path}", future=True)
 
 def init_db():
     with engine.begin() as conn:
